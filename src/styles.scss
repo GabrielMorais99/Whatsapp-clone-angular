@@ -1,12 +1,209 @@
 /* You can add global styles to this file, and also import other style files */
 @import "tailwindcss";
 
+/* Reset CSS básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Variáveis de cores */
+:root {
+  --whatsapp-green: #128c7e;
+  --whatsapp-light-green: #25d366;
+  --whatsapp-teal: #075e54;
+  --whatsapp-light-background: #e5ddd5;
+  --whatsapp-chat-background: #e4ddd6;
+  --whatsapp-conversation-panel: #f0f2f5;
+  --message-out: #dcf8c6;
+  --message-in: #ffffff;
+  --text-primary: #303030;
+  --text-secondary: #757575;
+  --divider-color: #e0e0e0;
+}
+
 html,
 body {
   height: 100%;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
-    Arial, sans-serif;
+  width: 100%;
+  overflow: hidden;
+  background-color: #dadbd3;
+}
+
+.app {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  background-color: var(--whatsapp-light-background);
+}
+
+/* Estilo para o container principal */
+.app__body {
+  display: flex;
+  background-color: #ededed;
+  height: 90vh;
+  width: 90vw;
+  margin: auto;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilos para sidebar */
+.sidebar {
+  flex: 0.35;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--divider-color);
+}
+
+.sidebar__header {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  background-color: var(--whatsapp-conversation-panel);
+}
+
+.sidebar__search {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  padding: 10px;
+}
+
+.sidebar__searchContainer {
+  display: flex;
+  align-items: center;
+  background-color: #f6f6f6;
+  width: 100%;
+  height: 35px;
+  border-radius: 20px;
+  padding: 0 10px;
+}
+
+.sidebar__chats {
+  background-color: white;
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* Estilos para chat */
+.chat {
+  flex: 0.65;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat__header {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: var(--whatsapp-conversation-panel);
+}
+
+.chat__body {
+  flex: 1;
+  background-image: url("https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png");
+  background-repeat: repeat;
+  background-position: center;
+  padding: 30px;
+  overflow-y: auto;
+}
+
+.chat__message {
+  position: relative;
+  font-size: 16px;
+  padding: 10px;
+  background-color: var(--message-in);
+  border-radius: 10px;
+  width: fit-content;
+  margin-bottom: 30px;
+  max-width: 70%;
+}
+
+.chat__receiver {
+  margin-left: auto;
+  background-color: var(--message-out);
+}
+
+.chat__timestamp {
+  margin-left: 10px;
+  font-size: xx-small;
+}
+
+.chat__name {
+  position: absolute;
+  top: -18px;
+  font-weight: 800;
+  font-size: xx-small;
+}
+
+.chat__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 62px;
+  border-top: 1px solid var(--divider-color);
+  background-color: var(--whatsapp-conversation-panel);
+  padding: 0 10px;
+}
+
+.chat__footer > form {
+  flex: 1;
+  display: flex;
+}
+
+.chat__footer > form > input {
+  flex: 1;
+  border-radius: 30px;
+  padding: 10px;
+  border: none;
+  outline: none;
+  margin: 0 10px;
+}
+
+.chat__footer > form > button {
+  display: none;
+}
+
+/* Estilos para a entrada de chat */
+.chat__input {
+  background-color: white;
+  border-radius: 20px;
+  padding: 10px 15px;
+  border: none;
+  outline: none;
+  flex: 1;
+  margin: 0 10px;
+}
+
+/* Estilos para ícones */
+.chat__icon,
+.sidebar__icon {
+  color: #919191;
+  cursor: pointer;
+  margin: 0 5px;
+}
+
+.chat__icon:hover,
+.sidebar__icon:hover {
+  color: var(--whatsapp-teal);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .app__body {
+    width: 100vw;
+    height: 100vh;
+  }
+
+  .sidebar {
+    flex: 0.4;
+  }
+
+  .chat {
+    flex: 0.6;
+  }
 }
 
 *::-webkit-scrollbar {

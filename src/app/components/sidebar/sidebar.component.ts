@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatService } from '../../services/chat.service';
 import { Contact } from '../../models/contact.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-sidebar',
@@ -12,7 +13,8 @@ import { Contact } from '../../models/contact.model';
     <div class="w-full h-full flex flex-col">
       <!-- Cabeçalho -->
       <div
-        class="bg-whatsapp-panel-bg h-16 px-4 flex items-center justify-between"
+        class="h-16 px-4 flex items-center justify-between"
+        style="background-color: #EDEDED;"
       >
         <div class="flex items-center">
           <div class="w-10 h-10 rounded-full bg-gray-300 flex-shrink-0"></div>
@@ -37,7 +39,7 @@ import { Contact } from '../../models/contact.model';
       </div>
 
       <!-- Barra de pesquisa -->
-      <div class="bg-whatsapp-panel-bg px-4 py-2">
+      <div class="px-4 py-2" style="background-color: #EDEDED;">
         <div class="flex items-center bg-white rounded-lg px-2">
           <span class="text-gray-500">🔍</span>
           <input
@@ -64,7 +66,8 @@ import { Contact } from '../../models/contact.model';
             >
               <div
                 *ngIf="contact.isOnline"
-                class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"
+                class="absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white"
+                style="background-color: #25D366;"
               ></div>
             </div>
             <div class="ml-3 flex-grow">
@@ -78,7 +81,8 @@ import { Contact } from '../../models/contact.model';
                 </p>
                 <div
                   *ngIf="contact.unread > 0"
-                  class="ml-2 w-5 h-5 bg-whatsapp-light rounded-full flex items-center justify-center"
+                  class="ml-2 w-5 h-5 rounded-full flex items-center justify-center"
+                  style="background-color: #25D366;"
                 >
                   <span class="text-xs text-white">{{ contact.unread }}</span>
                 </div>
@@ -99,25 +103,33 @@ import { Contact } from '../../models/contact.model';
     `,
   ],
 })
-export class SidebarComponent implements OnInit {
+export class SidebarComponent implements OnInit, OnDestroy {
   contacts: Contact[] = [];
   filteredContacts: Contact[] = [];
   activeContact: Contact | null = null;
   searchQuery: string = '';
+  private subscriptions: Subscription[] = [];
 
   constructor(private chatService: ChatService) {}
 
   ngOnInit(): void {
     // Inscrever-se para receber atualizações dos contatos
-    this.chatService.contacts$.subscribe((contacts) => {
+    const contactsSub = this.chatService.contacts$.subscribe((contacts) => {
       this.contacts = contacts;
       this.filterContacts();
     });
+    this.subscriptions.push(contactsSub);
 
     // Inscrever-se para receber atualizações do contato ativo
-    this.chatService.activeContact$.subscribe((contact) => {
+    const activeSub = this.chatService.activeContact$.subscribe((contact) => {
       this.activeContact = contact;
     });
+    this.subscriptions.push(activeSub);
+  }
+
+  ngOnDestroy(): void {
+    // Cancelar todas as inscrições para evitar memory leaks
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
   // Filtrar contatos com base na consulta de pesquisa
